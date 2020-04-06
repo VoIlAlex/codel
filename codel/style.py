@@ -48,3 +48,13 @@ class _ExtensionsStylizerBlock(_CollectorApplicable):
         )
 
 
+class _IgnoreStylizerBlock(_CollectorApplicable):
+    def apply(self, collector: FilesCollector) -> str:
+        return '{}{}Ignore: {}{}'.format(
+            fg(149),
+            attr(1),
+            attr(0),
+            ', '.join(collector.ignore)
+        )
+
+
