@@ -141,3 +141,12 @@ class _BlankLineStylizerBlock(_CollectorApplicable):
         return '\n'
 
 
+class DefaultStylizer(_Stylizer):
+    def __init__(self):
+        self.stylizer_blocks = [
+            _FolderNameStylizerBlock(),
+            _FolderPathStylizerBlock(),
+            _ExtensionsStylizerBlock(),
+            _IgnoreStylizerBlock(),
+            _LinesStylizerBlock()
+        ]
