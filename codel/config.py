@@ -81,3 +81,16 @@ class FolderConfiguration:
             self.commit()
 
 
+class UserConfiguration(FolderConfiguration):
+    def __init__(self):
+        if sys.platform == 'linux':
+            user_folder = os.getenv('HOME')
+        else:  # Windows
+            user_folder = os.getenv('USERPRIFILE')
+        FolderConfiguration.__init__(
+            self,
+            user_folder,
+            name='User configuration'
+        )
+
+
