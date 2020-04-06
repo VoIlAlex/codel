@@ -59,3 +59,24 @@ class Directory:
                     yield file
 
 
+class FilesCollector:
+    def __init__(self,
+                 folder_path: str = None,
+                 ignore: List[str] = None,
+                 extensions: List[str] = None):
+        self.folder_path: str
+        if folder_path is None:
+            self.folder_path = os.getcwd()
+        else:
+            self.folder_path = os.path.abspath(folder_path)
+        self.folder_name = os.path.split(self.folder_path)[-1]
+        self.directory = Directory(self.folder_path)
+        self.ignore = ignore if ignore else []
+        self.extensions = extensions if extensions else []
+
+    def __iter__(self):
+        ignore_parser = IgnoreParser(self.ignore)
+        for file in self.directory:
+            if file.file_ext in self.extensions:
+                if not ignore_parser.matches(file.file_path):
+                    yield file
