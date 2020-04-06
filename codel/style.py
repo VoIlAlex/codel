@@ -136,3 +136,8 @@ class _LinesStylizerBlock(_CollectorApplicable):
         return result
 
 
+class _BlankLineStylizerBlock(_CollectorApplicable):
+    def apply(self, collector: FilesCollector) -> str:
+        return '\n'
+
+
