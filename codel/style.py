@@ -38,3 +38,13 @@ class _FolderPathStylizerBlock(_CollectorApplicable):
         )
 
 
+class _ExtensionsStylizerBlock(_CollectorApplicable):
+    def apply(self, collector: FilesCollector) -> str:
+        return '{}{}Extensions:{} {}'.format(
+            fg(149),
+            attr(1),
+            attr(0),
+            ', '.join(collector.extensions)
+        )
+
+
