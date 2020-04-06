@@ -28,3 +28,13 @@ class _FolderNameStylizerBlock(_CollectorApplicable):
         )
 
 
+class _FolderPathStylizerBlock(_CollectorApplicable):
+    def apply(self, collector: FilesCollector) -> str:
+        return '{}{}Path:{} {}'.format(
+            fg(149),
+            attr(1),
+            attr(0),
+            collector.folder_path
+        )
+
+
