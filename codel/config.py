@@ -94,3 +94,28 @@ class UserConfiguration(FolderConfiguration):
         )
 
 
+class UnifiedConfiguration:
+    def __init__(self, folder: str = None):
+        self.folder_config = FolderConfiguration(folder)
+        self.user_config = UserConfiguration()
+
+    def commit(self):
+        self.folder_config.commit()
+        self.user_config.commit()
+
+    def __getitem__(self, section: str):
+        result = {}
+        if section in self.user_config:
+            result.update(self.user_config[section])
+        if section in self.folder_config:
+            result.update(self.folder_config[section])
+        return result
+
+    def __iter__(self):
+        return itertools.chain(
+            iter(self.folder_config),
+            iter(self.user_config)
+        )
+
+    def __str__(self):
+        return f'\n{self.folder_config}\n\n\n{self.user_config}'
