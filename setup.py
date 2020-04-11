@@ -17,7 +17,7 @@ setup(
     packages=find_packages('.'),
     # Start with a small number and increase it with
     # every change you make https://semver.org
-    version='1.0.0',
+    version='1.1.0',
     # Chose a license from here: https: //
     # help.github.com / articles / licensing - a -
     # repository. For example: MIT
@@ -34,7 +34,7 @@ setup(
     # Either the link to your github or to your website
     url='https://github.com/VoIlAlex',
     # Link from which the project can be downloaded
-    download_url='https://github.com/VoIlAlex/codel/archive/v1.0.0.tag.gz',
+    download_url='https://github.com/VoIlAlex/codel/archive/v1.1.0.tag.gz',
     # List of keywords
     keywords=[
         'cli',
@@ -46,7 +46,8 @@ setup(
     # List of packages to install with this one
     install_requires=[
         'colored',
-        'gitignore_parser'
+        'gitignore_parser',
+        'tqdm'
     ],
     # https://pypi.org/classifiers/
     classifiers=[
