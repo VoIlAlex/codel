@@ -59,6 +59,11 @@ def _setup_count_parser(subparsers: argparse._SubParsersAction):
         help='folder to work with.',
         default=os.getcwd()
     )
+    count_parser.add_argument(
+        '-s', '--short',
+        help='enable short output.',
+        action='store_true'
+    )
 
 
 def parse_args():
@@ -131,7 +136,9 @@ def cli():
             ignore=ignore,
             extensions=extensions
         )
-        stylizer = DefaultStylizer()
+        stylizer = DefaultStylizer(
+            short=args.short
+        )
         print(stylizer.apply(collector))
 
 
