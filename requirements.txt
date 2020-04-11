@@ -1,2 +1,3 @@
 colored
 gitignore_parser
+tqdm
