@@ -3,6 +3,7 @@ from colored import attr, fg
 from .config import UnifiedConfiguration
 from typing import Iterable, List
 from .utils import IgnoreParser
+from tqdm import tqdm
 
 
 class File:
@@ -30,7 +31,7 @@ class File:
 
 
 class Directory:
-    def __init__(self, directory_path: str, safe: bool = True):
+    def __init__(self, directory_path: str, safe: bool = True, verbose: bool = False):
         if safe:
             assert os.path.isdir(directory_path)
 
@@ -39,6 +40,11 @@ class Directory:
         self.directory_name = os.path.split(directory_path)
 
         files = os.listdir(self.directory_path)
+
+        if verbose:
+            print('Collecting files...')
+            progress_bar = tqdm(total=len(files))
+
         self.objects = []  # Files, Directories
         for file_name in files:
             file_path = os.path.join(self.directory_path, file_name)
@@ -49,6 +55,11 @@ class Directory:
             else:
                 continue
             self.objects.append(obj)
+            if verbose:
+                progress_bar.update()
+
+        if verbose:
+            progress_bar.close()
 
     def __iter__(self) -> Iterable[File]:
         for obj in self.objects:
@@ -70,7 +81,7 @@ class FilesCollector:
         else:
             self.folder_path = os.path.abspath(folder_path)
         self.folder_name = os.path.split(self.folder_path)[-1]
-        self.directory = Directory(self.folder_path)
+        self.directory = Directory(self.folder_path, verbose=True)
         self.ignore = ignore if ignore else []
         self.extensions = extensions if extensions else []
 
