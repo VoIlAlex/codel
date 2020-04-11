@@ -117,6 +117,14 @@ class _LinesStylizerBlock(_CollectorApplicable):
                 lines_mean = 0
         result += '\n'
 
+        result += '{}{}Files{} -> {}{}{}\n'.format(
+            fg(149),
+            attr(1),
+            attr(0),
+            attr(1),
+            len(files),
+            attr(0)
+        )
         result += '{}{}Lines/File{} -> {}{}{}\n'.format(
             fg(149),
             attr(1),
