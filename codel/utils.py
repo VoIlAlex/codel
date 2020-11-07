@@ -4,6 +4,7 @@ from gitignore_parser import (
 )
 from typing import List
 from io import StringIO
+from contextlib import contextmanager
 
 
 def parse_gitignore_from_stream(stream, folder: str):
@@ -31,3 +32,7 @@ class IgnoreParser:
 
     def matches(self, path: str):
         return self._matches(path)
+
+@contextmanager
+def empty_content():
+    yield None

@@ -3,7 +3,8 @@ from abc import ABC, abstractmethod
 from colored import fg, attr
 import shutil
 from tqdm import tqdm
-
+from multiprocessing import Manager
+from .utils import empty_content
 
 class _CollectorApplicable(ABC):
     @abstractmethod

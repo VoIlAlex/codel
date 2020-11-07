@@ -4,7 +4,7 @@ from .config import UnifiedConfiguration
 from typing import Iterable, List
 from .utils import IgnoreParser
 from tqdm import tqdm
-
+from multiprocessing import Pool, Manager, Process
 
 class File:
     def __init__(self, file_path: str, safe: bool = True):
@@ -31,7 +31,7 @@ class File:
 
 
 class Directory:
-    def __init__(self, directory_path: str, safe: bool = True, verbose: bool = False):
+    def __init__(self, directory_path: str, safe: bool = True, verbose: bool = False, multiproc: bool = False):
         if safe:
             assert os.path.isdir(directory_path)
 
@@ -46,18 +46,42 @@ class Directory:
             progress_bar = tqdm(total=len(files))
 
         self.objects = []  # Files, Directories
-        for file_name in files:
-            file_path = os.path.join(self.directory_path, file_name)
+
+        def add_item_to_objects(file_path: str, objects: list = self.objects):
             if os.path.isfile(file_path):
                 obj = File(file_path)
+                objects.append(obj)
             elif os.path.isdir(file_path):
                 obj = Directory(file_path)
-            else:
-                continue
-            self.objects.append(obj)
-            if verbose:
-                progress_bar.update()
+                objects.append(obj)
 
+        if not multiproc:
+            for file_name in files:
+                file_path = os.path.join(self.directory_path, file_name)
+                if os.path.isfile(file_path):
+                    obj = File(file_path)
+                    self.objects.append(obj)
+                elif os.path.isdir(file_path):
+                    obj = Directory(file_path)
+                    self.objects.append(obj)
+                else:
+                    continue
+                if verbose:
+                    progress_bar.update()
+
+        if multiproc:
+            with Manager() as manager:
+                
+                objects = manager.list()
+                for file_name in files:
+                    file_path = os.path.join(self.directory_path, file_name)
+                    proc = Process(target=add_item_to_objects, args=(file_path, objects))
+                    proc.start()
+                    proc.join()
+                    if verbose:
+                        progress_bar.update()
+                self.objects = list(objects)
+                
         if verbose:
             progress_bar.close()
 
@@ -74,14 +98,20 @@ class FilesCollector:
     def __init__(self,
                  folder_path: str = None,
                  ignore: List[str] = None,
-                 extensions: List[str] = None):
+                 extensions: List[str] = None,
+                 multiproc: bool = False):
+        self.multiproc = multiproc
         self.folder_path: str
         if folder_path is None:
             self.folder_path = os.getcwd()
         else:
             self.folder_path = os.path.abspath(folder_path)
         self.folder_name = os.path.split(self.folder_path)[-1]
-        self.directory = Directory(self.folder_path, verbose=True)
+        self.directory = Directory(
+            directory_path=self.folder_path, 
+            verbose=True, 
+            multiproc=self.multiproc
+        )
         self.ignore = ignore if ignore else []
         self.extensions = extensions if extensions else []
 

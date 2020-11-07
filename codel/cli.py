@@ -64,6 +64,11 @@ def _setup_count_parser(subparsers: argparse._SubParsersAction):
         help='enable short output.',
         action='store_true'
     )
+    count_parser.add_argument(
+        '-m', '--multiproc',
+        help='enable multiprocessing.',
+        action='store_true'
+    )
 
 
 def parse_args():
@@ -130,11 +135,16 @@ def cli():
                 exit(-1)
         else:
             extensions = args.extensions
+        multiproc = args.multiproc
+
+        if multiproc:
+            print('Using multiprocessing mode...')
 
         collector = FilesCollector(
             folder_path=args.folder,
             ignore=ignore,
-            extensions=extensions
+            extensions=extensions,
+            multiproc=multiproc
         )
         stylizer = DefaultStylizer(
             short=args.short
